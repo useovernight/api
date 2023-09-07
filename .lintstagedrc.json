@@ -1,5 +1,6 @@
 {
   "*.(ts)": [
+    "node -r ts-node/register ./scripts/check-copyright-header.ts",
     "yarn run lint:fix --max-warnings 0",
     "yarn run format"
   ]
