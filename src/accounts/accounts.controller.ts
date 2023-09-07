@@ -2,17 +2,20 @@
  * Copyright (c) Overnight
  */
 
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
+import { AccountsService } from './accounts.service'
 import { GetAccountResDto } from './dto/get-account.res.dto'
 import { Account } from './entities/account.entity'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt.guard'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { ErrorResDto } from '../common/dto/error.res.dto'
 
@@ -20,6 +23,8 @@ import { ErrorResDto } from '../common/dto/error.res.dto'
 @ApiTags('Accounts')
 @ApiBearerAuth()
 class AccountsController {
+  constructor(private readonly accountsService: AccountsService) {}
+
   @Get('/me')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
@@ -35,6 +40,23 @@ class AccountsController {
   })
   getCurrentUserProfile(@CurrentUser() user: Account): GetAccountResDto {
     return user
+  }
+
+  @Get('/accounts/:id')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiOperation({
+    summary: 'Get profile information about a user'
+  })
+  @ApiOkResponse({
+    description: 'Profile information',
+    type: GetAccountResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  getUserProfile(@Param('id') id: string): Promise<GetAccountResDto> {
+    return this.accountsService.findById(id)
   }
 }
 
