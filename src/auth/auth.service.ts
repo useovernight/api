@@ -56,6 +56,27 @@ class AuthService {
 
     return account
   }
+
+  async loginWithGoogleAccessToken(accessToken: string): Promise<Account> {
+    const person = await this.googleApiService.getPersonFromAccessToken(
+      accessToken
+    )
+
+    const googleCredentials = await this.googleCredentialsRepository.findOne({
+      where: {
+        googleId: person.id
+      },
+      relations: ['account']
+    })
+
+    if (googleCredentials === null) {
+      throw new BadRequestException(
+        'No account associated with this Google account.'
+      )
+    }
+
+    return googleCredentials.account
+  }
 }
 
 export { AuthService }
