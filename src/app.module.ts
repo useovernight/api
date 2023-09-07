@@ -2,11 +2,16 @@
  * Copyright (c) Overnight
  */
 
-import { Module } from '@nestjs/common'
+import {
+  ClassSerializerInterceptor,
+  Module,
+  ValidationPipe
+} from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import { AuthModule } from './auth/auth.module'
+import { AuthTokensModule } from './auth-tokens/auth-tokens.module'
 
 @Module({
   imports: [
@@ -35,10 +40,24 @@ import { AppService } from './app.service'
           configService.get<string>('POSTGRES_SYNCHRONIZE') === 'true'
       }),
       inject: [ConfigService]
-    })
+    }),
+    AuthModule,
+    AuthTokensModule
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  providers: [
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          whitelist: true,
+          forbidNonWhitelisted: true
+        })
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor
+    }
+  ]
 })
 class AppModule {}
 

@@ -42,14 +42,16 @@ Environment variables can be stored in the following files, each with specific r
 
 Here is a table explaining each environment variable used by the project:
 
-| **Variable name**    | **Description**                                      | **Type** | **Default value in dev env** | **Default value in all env** |
-|----------------------|------------------------------------------------------|----------|------------------------------|------------------------------|
-| APP_PORT             | The port on which the application runs               | number   | ✅                            | ✅                            |
-| POSTGRES_HOST        | Host of the Postgres service                         | string   | ✅                            | ❌                            |
-| POSTGRES_PORT        | Port of the Postgres service                         | number   | ✅                            | ❌                            |
-| POSTGRES_USERNAME    | Username of the Postgres database user               | string   | ✅                            | ❌                            |
-| POSTGRES_PASSWORD    | Password of the Postgres database user               | string   | ✅                            | ❌                            |
-| POSTGRES_DATABASE    | Name of the Postgres database                        | string   | ✅                            | ❌                            |
-| POSTGRES_SYNCHRONIZE | Whether to synchronize entities with database models | boolean  | ✅                            | ✅                            |
-| ADMINER_PORT         | Port of the Adminer service                          | number   | ✅                            | ❌                            |
-| NODE_ENV             | Current environment                                  | string   | ✅                            | ❌                            |
+| **Variable name**     | **Description**                                      | **Type** | **Default value in dev env** | **Default value in all env** |
+|-----------------------|------------------------------------------------------|----------|------------------------------|------------------------------|
+| APP_PORT              | The port on which the application runs               | number   | ✅                            | ✅                            |
+| POSTGRES_HOST         | Host of the Postgres service                         | string   | ✅                            | ❌                            |
+| POSTGRES_PORT         | Port of the Postgres service                         | number   | ✅                            | ❌                            |
+| POSTGRES_USERNAME     | Username of the Postgres database user               | string   | ✅                            | ❌                            |
+| POSTGRES_PASSWORD     | Password of the Postgres database user               | string   | ✅                            | ❌                            |
+| POSTGRES_DATABASE     | Name of the Postgres database                        | string   | ✅                            | ❌                            |
+| POSTGRES_SYNCHRONIZE  | Whether to synchronize entities with database models | boolean  | ✅                            | ✅                            |
+| ADMINER_PORT          | Port of the Adminer service                          | number   | ✅                            | ❌                            |
+| JWT_SECRET            | Secret for JWT                                       | string   | ✅                            | ❌                            |
+| JWT_OPTION_EXPIRES_IN | JWT expiration time                                  | string   | ✅                            | ❌                            |
+| NODE_ENV              | Current environment                                  | string   | ✅                            | ❌                            |
