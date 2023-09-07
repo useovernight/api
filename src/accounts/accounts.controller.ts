@@ -2,7 +2,13 @@
  * Copyright (c) Overnight
  */
 
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -18,6 +24,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard'
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt.guard'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { ErrorResDto } from '../common/dto/error.res.dto'
+import { AccountSerializer } from '../common/serializers/account.serializer'
 
 @Controller('/')
 @ApiTags('Accounts')
@@ -27,6 +34,7 @@ class AccountsController {
 
   @Get('/me')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AccountSerializer)
   @ApiOperation({
     summary: 'Get detailed information about the current user'
   })
@@ -44,6 +52,7 @@ class AccountsController {
 
   @Get('/accounts/:id')
   @UseGuards(OptionalJwtAuthGuard)
+  @UseInterceptors(AccountSerializer)
   @ApiOperation({
     summary: 'Get profile information about a user'
   })
