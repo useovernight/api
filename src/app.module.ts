@@ -13,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module'
 import { AuthTokensModule } from './auth-tokens/auth-tokens.module'
 import { AccountsModule } from './accounts/accounts.module'
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 
 @Module({
   imports: [
@@ -58,6 +59,10 @@ import { AccountsModule } from './accounts/accounts.module'
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor
     }
   ]
 })

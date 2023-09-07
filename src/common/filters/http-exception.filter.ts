@@ -2,9 +2,12 @@
  * Copyright (c) Overnight
  */
 
-import { Catch, HttpException } from '@nestjs/common'
+import { Catch, HttpException, Logger } from '@nestjs/common'
 import { isObject } from '@nestjs/common/utils/shared.utils'
 import { HttpAdapterHost } from '@nestjs/core'
+import { StatusCodeClass } from '../enums/status-code-class.enum'
+import { getStatusCodeClass } from '../helpers/status-code.helper'
+import { getLogErrorMessage } from '../helpers/log.helper'
 import type { Request } from 'express'
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
 import type { ErrorResDto } from '../dto/error.res.dto'
@@ -35,6 +38,8 @@ const isResponseWithStringError = (
 
 @Catch(HttpException)
 class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name)
+
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   private static getMessageFromException(
@@ -62,6 +67,10 @@ class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost
     const context = host.switchToHttp()
+    const request = context.getRequest<Request>()
+
+    const statusCodeClass = getStatusCodeClass(exception.getStatus())
+    const message = getLogErrorMessage(request, exception.getStatus())
 
     const body: ErrorResDto = {
       status: 'failure',
@@ -71,6 +80,16 @@ class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: context.getRequest<Request>().url,
       method: context.getRequest<Request>().method
+    }
+
+    switch (statusCodeClass) {
+      case StatusCodeClass.ClientError: {
+        this.logger.warn(message)
+        break
+      }
+      default: {
+        this.logger.error(message)
+      }
     }
 
     httpAdapter.reply(context.getResponse(), body, exception.getStatus())
