@@ -6,6 +6,7 @@ import { createQueryTester } from 'sift'
 import { AbilityBuilder, PureAbility } from '@casl/ability'
 import { Injectable } from '@nestjs/common'
 import { Account } from '../accounts/entities/account.entity'
+import { AuthToken } from '../auth-tokens/entities/auth-token.entity'
 import { CaslAction } from '../common/enums/casl-action.enum'
 import { Permission } from '../common/enums/permission.enum'
 import type {
@@ -14,7 +15,7 @@ import type {
   InferSubjects
 } from '@casl/ability'
 
-type Subjects = InferSubjects<typeof Account>
+type Subjects = InferSubjects<typeof Account | typeof AuthToken>
 type AppAbility = PureAbility<[CaslAction, Subjects]>
 
 @Injectable()
@@ -37,6 +38,26 @@ class CaslAbilityFactory {
 
     if (permissions.includes(Permission.DeleteOwnAccount))
       can(CaslAction.Delete, Account, { id: account.id })
+
+    /* Auth Token */
+    if (permissions.includes(Permission.ReadAuthTokens))
+      can(CaslAction.Read, AuthToken)
+
+    if (permissions.includes(Permission.ReadOwnAuthTokens)) {
+      can(CaslAction.Read, AuthToken, {
+        'owner.id': account.id
+      })
+    }
+
+    if (permissions.includes(Permission.DeleteAuthTokens)) {
+      can(CaslAction.Delete, AuthToken)
+    }
+
+    if (permissions.includes(Permission.DeleteOwnAuthTokens)) {
+      can(CaslAction.Delete, AuthToken, {
+        'owner.id': account.id
+      })
+    }
 
     return build({
       detectSubjectType: (subject) =>

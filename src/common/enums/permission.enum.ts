@@ -7,7 +7,11 @@ enum Permission {
   UpdateOwnAccount = 'Permission.UpdateOwnAccount',
   UpdateAccountPermissions = 'Permission.UpdateAccountPermissions',
   DeleteAccounts = 'Permission.DeleteAccounts',
-  DeleteOwnAccount = 'Permission.DeleteOwnAccount'
+  DeleteOwnAccount = 'Permission.DeleteOwnAccount',
+  ReadAuthTokens = 'Permission.ReadAuthTokens',
+  ReadOwnAuthTokens = 'Permission.ReadOwnAuthTokens',
+  DeleteAuthTokens = 'Permission.DeleteAuthTokens',
+  DeleteOwnAuthTokens = 'Permission.DeleteOwnAuthTokens'
 }
 
 export { Permission }
