@@ -11,6 +11,14 @@
     // Modules
     "module": "commonjs",
     "baseUrl": "./",
+    "paths": {
+      "@useovernight/pagination": [
+        "libs/pagination/src"
+      ],
+      "@useovernight/pagination/*": [
+        "libs/pagination/src/*"
+      ]
+    },
 
     // Emit
     "outDir": "./dist",

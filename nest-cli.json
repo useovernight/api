@@ -3,6 +3,18 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "pagination": {
+      "type": "library",
+      "root": "libs/pagination",
+      "entryFile": "index",
+      "sourceRoot": "libs/pagination/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/pagination/tsconfig.lib.json"
+      }
+    }
   }
 }

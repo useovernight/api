@@ -172,6 +172,13 @@
     // eslint-plugin-import -- Static analysis
     "import/no-absolute-path": "warn",
     "import/no-self-import": "error",
+    "import/no-unresolved": [
+      "error", {
+        "ignore": [
+          "@useovernight/pagination"
+        ]
+      }
+    ],
     "import/no-useless-path-segments": "warn",
     "import/no-webpack-loader-syntax": "error",
 
