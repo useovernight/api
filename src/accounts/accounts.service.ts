@@ -101,6 +101,18 @@ class AccountsService {
     return this.delete(subject, initiator)
   }
 
+  async isHandleAvailableAndCorrectlyFormatted(
+    handle: string
+  ): Promise<boolean> {
+    const errors = validateHandle(handle)
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors)
+    }
+
+    return this.isHandleAvailable(handle)
+  }
+
   private async isHandleAvailable(handle: string): Promise<boolean> {
     return (await this.accountsRepository.findOneBy({ handle })) === null
   }

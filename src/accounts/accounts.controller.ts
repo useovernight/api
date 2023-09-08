@@ -27,6 +27,7 @@ import {
 } from '@nestjs/swagger'
 import { AccountsService } from './accounts.service'
 import { GetAccountResDto } from './dto/get-account.res.dto'
+import { GetHandleAvailabilityResDto } from './dto/get-handle-availability.res.dto'
 import { UpdateAccountReqDto } from './dto/update-account.req.dto'
 import { Account } from './entities/account.entity'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
@@ -75,6 +76,29 @@ class AccountsController {
   })
   getUserProfile(@Param('id') id: string): Promise<GetAccountResDto> {
     return this.accountsService.findById(id)
+  }
+
+  @Get('/handles/availability/:handle')
+  @ApiOperation({
+    summary: 'Get the availability of an handle'
+  })
+  @ApiOkResponse({
+    description: 'The availability of the specified handle',
+    type: GetHandleAvailabilityResDto
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+    type: ErrorResDto
+  })
+  async getHandleAvailability(
+    @Param('handle') handle: string
+  ): Promise<GetHandleAvailabilityResDto> {
+    const availability =
+      await this.accountsService.isHandleAvailableAndCorrectlyFormatted(handle)
+
+    return {
+      availability
+    }
   }
 
   @Patch('/me')
