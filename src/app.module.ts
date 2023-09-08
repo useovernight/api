@@ -10,9 +10,10 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { AccountsModule } from './accounts/accounts.module'
 import { AuthModule } from './auth/auth.module'
 import { AuthTokensModule } from './auth-tokens/auth-tokens.module'
-import { AccountsModule } from './accounts/accounts.module'
+import { CaslModule } from './casl/casl.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 
 @Module({
@@ -45,7 +46,8 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
     }),
     AccountsModule,
     AuthModule,
-    AuthTokensModule
+    AuthTokensModule,
+    CaslModule
   ],
   providers: [
     {

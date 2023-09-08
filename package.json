@@ -24,6 +24,7 @@
     "typeorm:migration:revert": "yarn run typeorm migration:revert"
   },
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.1",
@@ -43,6 +44,7 @@
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "sift": "^17.0.1",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
