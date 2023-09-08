@@ -14,6 +14,7 @@ import { Account } from './entities/account.entity'
 import { validateHandle, validateUsername } from './helpers/name.helper'
 import { CaslAbilityFactory } from '../casl/casl-ability.factory'
 import { CaslAction } from '../common/enums/casl-action.enum'
+import { Permission } from '../common/enums/permission.enum'
 import type { UpdateAccountReqDto } from './dto/update-account.req.dto'
 
 @Injectable()
@@ -84,6 +85,32 @@ class AccountsService {
   ): Promise<Account> {
     const subject = await this.findById(id)
     return this.update(subject, body, initiator)
+  }
+
+  async putPermissions(
+    subject: Account,
+    permissions: Permission[],
+    initiator: Account
+  ): Promise<Account> {
+    if (!initiator.permissions.includes(Permission.UpdateAccountPermissions)) {
+      throw new ForbiddenException()
+    }
+
+    await this.accountsRepository.save({
+      ...subject,
+      permissions
+    })
+
+    return this.findById(subject.id)
+  }
+
+  async putPermissionsById(
+    id: string,
+    permissions: Permission[],
+    initiator: Account
+  ): Promise<Account> {
+    const subject = await this.findById(id)
+    return this.putPermissions(subject, permissions, initiator)
   }
 
   async delete(subject: Account, initiator: Account): Promise<void> {

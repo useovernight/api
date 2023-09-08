@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Put,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
@@ -29,6 +30,7 @@ import { AccountsService } from './accounts.service'
 import { GetAccountResDto } from './dto/get-account.res.dto'
 import { GetHandleAvailabilityResDto } from './dto/get-handle-availability.res.dto'
 import { UpdateAccountReqDto } from './dto/update-account.req.dto'
+import { UpdateAccountPermissionsReqDto } from './dto/update-account-permissions.req.dto'
 import { Account } from './entities/account.entity'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
 import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt.guard'
@@ -162,6 +164,41 @@ class AccountsController {
     @Body() body: UpdateAccountReqDto
   ): Promise<GetAccountResDto> {
     return this.accountsService.updateById(id, body, currentUser)
+  }
+
+  @Put('/accounts/:id/permissions')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AccountSerializer)
+  @ApiOperation({
+    summary: 'Update permissions of a user'
+  })
+  @ApiOkResponse({
+    description: 'Updated profile information',
+    type: GetAccountResDto
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+    type: ErrorResDto
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  updateUserPermissions(
+    @CurrentUser() currentUser: Account,
+    @Param('id') id: string,
+    @Body() body: UpdateAccountPermissionsReqDto
+  ): Promise<Account> {
+    const { permissions } = body
+    return this.accountsService.putPermissionsById(id, permissions, currentUser)
   }
 
   @Delete('/me')
