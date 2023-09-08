@@ -86,6 +86,21 @@ class AccountsService {
     return this.update(subject, body, initiator)
   }
 
+  async delete(subject: Account, initiator: Account): Promise<void> {
+    const ability = this.caslAbilityFactory.createForAccount(initiator)
+
+    if (ability.cannot(CaslAction.Delete, subject)) {
+      throw new ForbiddenException()
+    }
+
+    await this.accountsRepository.remove(subject)
+  }
+
+  async deleteById(id: string, initiator: Account): Promise<void> {
+    const subject = await this.findById(id)
+    return this.delete(subject, initiator)
+  }
+
   private async isHandleAvailable(handle: string): Promise<boolean> {
     return (await this.accountsRepository.findOneBy({ handle })) === null
   }

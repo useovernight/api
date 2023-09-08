@@ -5,7 +5,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   UseGuards,
@@ -15,6 +18,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -134,6 +138,57 @@ class AccountsController {
     @Body() body: UpdateAccountReqDto
   ): Promise<GetAccountResDto> {
     return this.accountsService.updateById(id, body, currentUser)
+  }
+
+  @Delete('/me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Delete profile of the current user'
+  })
+  @ApiNoContentResponse({
+    description: 'Current user profile deleted'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  async deleteCurrentUserProfile(
+    @CurrentUser() currentUser: Account
+  ): Promise<void> {
+    await this.accountsService.delete(currentUser, currentUser)
+  }
+
+  @Delete('/accounts/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Delete profile of a user'
+  })
+  @ApiNoContentResponse({
+    description: 'User profile deleted'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  async deleteUserProfile(
+    @CurrentUser() currentUser: Account,
+    @Param('id') id: string
+  ): Promise<void> {
+    await this.accountsService.deleteById(id, currentUser)
   }
 }
 
