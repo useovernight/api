@@ -79,12 +79,29 @@ class NeighborhoodsService {
   async update(
     subject: Neighborhood,
     body: UpdateNeighborhoodReqDto,
+    cover: Express.Multer.File | undefined,
     initiator: Account
   ): Promise<Neighborhood> {
     const ability = this.caslAbilityFactory.createForAccount(initiator)
 
     if (ability.cannot(CaslAction.Update, subject)) {
       throw new ForbiddenException()
+    }
+
+    if (cover !== undefined) {
+      const [width, height] = PreferredNeighborhoodCoverImageDimensions
+      const { url, key } = await this.imageTransferService.upload(cover, [
+        width,
+        height
+      ])
+      const oldKey = subject.image.key
+
+      await this.neighborhoodCoverImagesRepository.save({
+        ...subject.image,
+        url,
+        key
+      })
+      await this.imageTransferService.delete(oldKey)
     }
 
     await this.neighborhoodsRepository.save({
@@ -98,10 +115,11 @@ class NeighborhoodsService {
   async updateById(
     id: string,
     body: UpdateNeighborhoodReqDto,
+    cover: Express.Multer.File | undefined,
     initiator: Account
   ): Promise<Neighborhood> {
     const subject = await this.findById(id)
-    return this.update(subject, body, initiator)
+    return this.update(subject, body, cover, initiator)
   }
 
   async delete(subject: Neighborhood, initiator: Account): Promise<void> {

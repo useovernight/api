@@ -169,6 +169,7 @@ class NeighborhoodsController {
 
   @Patch('/neighborhoods/:id')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('cover'))
   @ApiOperation({
     summary: 'Update information about a neighborhood'
   })
@@ -200,9 +201,24 @@ class NeighborhoodsController {
   updateNeighborhood(
     @CurrentUser() currentUser: Account,
     @Param('id') id: string,
-    @Body() body: UpdateNeighborhoodReqDto
+    @Body() body: UpdateNeighborhoodReqDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: NeighborhoodCoverImageMaxSize
+          }),
+          new FileMimeTypeValidator({
+            mimeTypes: SupportedImageMimeTypes
+          })
+        ]
+      })
+    )
+    cover: Express.Multer.File | undefined
   ): Promise<GetNeighborhoodResDto> {
-    return this.neighborhoodsService.updateById(id, body, currentUser)
+    return this.neighborhoodsService.updateById(id, body, cover, currentUser)
   }
 
   @Delete('/neighborhoods/:id')
