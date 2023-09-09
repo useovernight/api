@@ -6,7 +6,9 @@ import { Express } from 'express'
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
   Param,
@@ -25,6 +27,7 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -200,6 +203,34 @@ class NeighborhoodsController {
     @Body() body: UpdateNeighborhoodReqDto
   ): Promise<GetNeighborhoodResDto> {
     return this.neighborhoodsService.updateById(id, body, currentUser)
+  }
+
+  @Delete('/neighborhoods/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Delete a neighborhood'
+  })
+  @ApiNoContentResponse({
+    description: 'Successfully deleted neighborhood'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  async deleteNeighborhood(
+    @CurrentUser() currentUser: Account,
+    @Param('id') id: string
+  ): Promise<void> {
+    await this.neighborhoodsService.deleteById(id, currentUser)
   }
 }
 

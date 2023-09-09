@@ -104,6 +104,23 @@ class NeighborhoodsService {
     return this.update(subject, body, initiator)
   }
 
+  async delete(subject: Neighborhood, initiator: Account): Promise<void> {
+    const ability = this.caslAbilityFactory.createForAccount(initiator)
+
+    if (ability.cannot(CaslAction.Delete, subject)) {
+      throw new ForbiddenException()
+    }
+
+    await this.neighborhoodsRepository.remove(subject)
+    await this.neighborhoodCoverImagesRepository.remove(subject.image)
+    await this.imageTransferService.delete(subject.image.key)
+  }
+
+  async deleteById(id: string, initiator: Account): Promise<void> {
+    const subject = await this.findById(id)
+    await this.delete(subject, initiator)
+  }
+
   private async createCoverImage(
     file: Express.Multer.File
   ): Promise<NeighborhoodCoverImage> {
