@@ -12,6 +12,7 @@ import {
   Param,
   ParseFilePipe,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -26,6 +27,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse
@@ -33,12 +35,15 @@ import {
 import { NeighborhoodsService } from './neighborhoods.service'
 import { CreateNeighborhoodReqDto } from './dto/create-neighborhood.req.dto'
 import { GetNeighborhoodResDto } from './dto/get-neighborhood.res.dto'
+import { GetNeighborhoodsQueryDto } from './dto/get-neighborhoods.query.res.dto'
+import { GetNeighborhoodsResDto } from './dto/get-neighborhoods.res.dto'
 import { Account } from '../accounts/entities/account.entity'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
 import { NeighborhoodCoverImageMaxSize } from '../common/constants/file-size.const'
 import { SupportedImageMimeTypes } from '../common/constants/mime-type.const'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { ErrorResDto } from '../common/dto/error.res.dto'
+import { ObjectType } from '../common/enums/object-type.enum'
 import { FileMimeTypeValidator } from '../common/pipes/validators/file-mime-type.validator'
 
 @Controller('/')
@@ -94,6 +99,51 @@ class NeighborhoodsController {
     file: Express.Multer.File
   ): Promise<GetNeighborhoodResDto> {
     return this.neighborhoodsService.create(body, file, currentUser)
+  }
+
+  @Get('/neighborhoods')
+  @ApiOperation({
+    summary: 'List neighborhoods'
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    required: false
+  })
+  @ApiQuery({
+    name: 'order',
+    type: String,
+    required: false
+  })
+  @ApiQuery({
+    name: 'after',
+    type: String,
+    required: false
+  })
+  @ApiQuery({
+    name: 'before',
+    type: String,
+    required: false
+  })
+  @ApiOkResponse({
+    description: 'List of neighborhoods',
+    type: GetNeighborhoodsResDto
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+    type: ErrorResDto
+  })
+  async listNeighborhoods(
+    @Query() query: GetNeighborhoodsQueryDto
+  ): Promise<GetNeighborhoodsResDto> {
+    const { items, cursors } =
+      await this.neighborhoodsService.listNeighborhoods(query)
+
+    return {
+      items,
+      cursors,
+      object: ObjectType.List
+    }
   }
 
   @Get('/neighborhoods/:id')
