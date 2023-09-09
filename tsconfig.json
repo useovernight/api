@@ -17,6 +17,12 @@
       ],
       "@useovernight/pagination/*": [
         "libs/pagination/src/*"
+      ],
+      "@useovernight/document-transfer": [
+        "libs/document-transfer/src"
+      ],
+      "@useovernight/document-transfer/*": [
+        "libs/document-transfer/src/*"
       ]
     },
 

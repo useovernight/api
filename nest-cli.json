@@ -15,6 +15,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/pagination/tsconfig.lib.json"
       }
+    },
+    "document-transfer": {
+      "type": "library",
+      "root": "libs/document-transfer",
+      "entryFile": "index",
+      "sourceRoot": "libs/document-transfer/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/document-transfer/tsconfig.lib.json"
+      }
     }
   }
 }

@@ -52,6 +52,10 @@ Here is a table explaining each environment variable used by the project:
 | POSTGRES_DATABASE      | Name of the Postgres database                        | string   | ✅                            | ❌                            |
 | POSTGRES_SYNCHRONIZE   | Whether to synchronize entities with database models | boolean  | ✅                            | ✅                            |
 | ADMINER_PORT           | Port of the Adminer service                          | number   | ✅                            | ❌                            |
+| AWS_S3_REGION          | Region of the AWS S3 bucket                          | string   | ✅                            | ❌                            |
+| AWS_S3_BUCKET          | Bucket name of the AWS S3 bucket                     | string   | ✅                            | ❌                            |
+| AWS_ACCESS_KEY_ID      | Access key id for AWS                                | string   | ❌                            | ❌                            |
+| AWS_SECRET_ACCESS_KEY  | Secret access key for AWS                            | string   | ❌                            | ❌                            |
 | JWT_SECRET             | Secret for JWT                                       | string   | ✅                            | ❌                            |
 | JWT_OPTION_EXPIRES_IN  | JWT expiration time                                  | string   | ✅                            | ❌                            |
 | SWAGGER_DOC_VISIBILITY | Determines if the Swagger document is visible        | boolean  | ✅                            | ✅                            |

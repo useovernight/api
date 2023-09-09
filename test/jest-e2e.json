@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@useovernight/pagination/(.*)": "<rootDir>/../libs/pagination/src/$1",
-    "@useovernight/pagination": "<rootDir>/../libs/pagination/src"
+    "@useovernight/pagination": "<rootDir>/../libs/pagination/src",
+    "@useovernight/document-transfer/(.*)": "<rootDir>/../libs/document-transfer/src/$1",
+    "@useovernight/document-transfer": "<rootDir>/../libs/document-transfer/src"
   }
 }

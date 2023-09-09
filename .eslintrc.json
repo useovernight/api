@@ -175,6 +175,7 @@
     "import/no-unresolved": [
       "error", {
         "ignore": [
+          "@useovernight/document-transfer",
           "@useovernight/pagination"
         ]
       }
