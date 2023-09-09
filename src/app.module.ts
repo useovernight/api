@@ -12,11 +12,19 @@ import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { DocumentTransferModule } from '@useovernight/document-transfer'
 import { AccountsModule } from './accounts/accounts.module'
+import { Account } from './accounts/entities/account.entity'
 import { AuthModule } from './auth/auth.module'
+import { GoogleCredentials } from './auth/entities/google-credentials.entity'
 import { AuthTokensModule } from './auth-tokens/auth-tokens.module'
+import { AuthToken } from './auth-tokens/entities/auth-token.entity'
 import { CaslModule } from './casl/casl.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { NeighborhoodsModule } from './neighborhoods/neighborhoods.module'
+import { Neighborhood } from './neighborhoods/entities/neighborhood.entity'
+import { NeighborhoodCoverImage } from './neighborhoods/entities/neighborhood-cover-image.entity'
+import { OrganizationsModule } from './organizations/organizations.module'
+import { Organization } from './organizations/entities/organization.entity'
+import { OrganizationImage } from './organizations/entities/organization-image.entity'
 
 @Module({
   imports: [
@@ -39,8 +47,15 @@ import { NeighborhoodsModule } from './neighborhoods/neighborhoods.module'
         username: configService.get<string>('POSTGRES_USERNAME'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DATABASE'),
-        // eslint-disable-next-line unicorn/prefer-module
-        entities: [`${__dirname}/**/entities/*.entity.{js,ts}`],
+        entities: [
+          Account,
+          GoogleCredentials,
+          AuthToken,
+          Neighborhood,
+          NeighborhoodCoverImage,
+          Organization,
+          OrganizationImage
+        ],
         synchronize:
           configService.get<string>('POSTGRES_SYNCHRONIZE') === 'true'
       }),
@@ -51,7 +66,8 @@ import { NeighborhoodsModule } from './neighborhoods/neighborhoods.module'
     AuthTokensModule,
     CaslModule,
     DocumentTransferModule,
-    NeighborhoodsModule
+    NeighborhoodsModule,
+    OrganizationsModule
   ],
   providers: [
     {

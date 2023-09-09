@@ -10,6 +10,7 @@ import { AuthToken } from '../auth-tokens/entities/auth-token.entity'
 import { CaslAction } from '../common/enums/casl-action.enum'
 import { Permission } from '../common/enums/permission.enum'
 import { Neighborhood } from '../neighborhoods/entities/neighborhood.entity'
+import { Organization } from '../organizations/entities/organization.entity'
 import type {
   AbilityClass,
   ExtractSubjectType,
@@ -17,7 +18,7 @@ import type {
 } from '@casl/ability'
 
 type Subjects = InferSubjects<
-  typeof Account | typeof AuthToken | typeof Neighborhood
+  typeof Account | typeof AuthToken | typeof Neighborhood | typeof Organization
 >
 type AppAbility = PureAbility<[CaslAction, Subjects]>
 
@@ -30,21 +31,26 @@ class CaslAbilityFactory {
     const permissions = account.permissions
 
     /* Account */
-    if (permissions.includes(Permission.UpdateAccounts))
+    if (permissions.includes(Permission.UpdateAccounts)) {
       can(CaslAction.Update, Account)
+    }
 
-    if (permissions.includes(Permission.UpdateOwnAccount))
+    if (permissions.includes(Permission.UpdateOwnAccount)) {
       can(CaslAction.Update, Account, { id: account.id })
+    }
 
-    if (permissions.includes(Permission.DeleteAccounts))
+    if (permissions.includes(Permission.DeleteAccounts)) {
       can(CaslAction.Delete, Account)
+    }
 
-    if (permissions.includes(Permission.DeleteOwnAccount))
+    if (permissions.includes(Permission.DeleteOwnAccount)) {
       can(CaslAction.Delete, Account, { id: account.id })
+    }
 
     /* Auth Token */
-    if (permissions.includes(Permission.ReadAuthTokens))
+    if (permissions.includes(Permission.ReadAuthTokens)) {
       can(CaslAction.Read, AuthToken)
+    }
 
     if (permissions.includes(Permission.ReadOwnAuthTokens)) {
       can(CaslAction.Read, AuthToken, {
@@ -73,6 +79,19 @@ class CaslAbilityFactory {
 
     if (permissions.includes(Permission.DeleteNeighborhoods)) {
       can(CaslAction.Delete, Neighborhood)
+    }
+
+    /* Organization */
+    if (permissions.includes(Permission.CreateOrganizations)) {
+      can(CaslAction.Create, Organization)
+    }
+
+    if (permissions.includes(Permission.UpdateOrganizations)) {
+      can(CaslAction.Update, Organization)
+    }
+
+    if (permissions.includes(Permission.DeleteOrganizations)) {
+      can(CaslAction.Delete, Organization)
     }
 
     return build({

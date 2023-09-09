@@ -14,7 +14,10 @@ enum Permission {
   DeleteOwnAuthTokens = 'Permission.DeleteOwnAuthTokens',
   CreateNeighborhoods = 'Permission.CreateNeighborhoods',
   UpdateNeighborhoods = 'Permission.UpdateNeighborhoods',
-  DeleteNeighborhoods = 'Permission.DeleteNeighborhoods'
+  DeleteNeighborhoods = 'Permission.DeleteNeighborhoods',
+  CreateOrganizations = 'Permission.CreateOrganizations',
+  UpdateOrganizations = 'Permission.UpdateOrganizations',
+  DeleteOrganizations = 'Permission.DeleteOrganizations'
 }
 
 export { Permission }
