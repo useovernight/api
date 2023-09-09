@@ -3,7 +3,11 @@
  */
 
 import { Repository } from 'typeorm'
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ImageTransferService } from '@useovernight/document-transfer'
 import { Neighborhood } from './entities/neighborhood.entity'
@@ -25,6 +29,16 @@ class NeighborhoodsService {
     private readonly caslAbilityFactory: CaslAbilityFactory,
     private readonly imageTransferService: ImageTransferService
   ) {}
+
+  async findById(id: string): Promise<Neighborhood> {
+    const neighborhood = await this.neighborhoodsRepository.findOneBy({ id })
+
+    if (neighborhood === null) {
+      throw new NotFoundException()
+    }
+
+    return neighborhood
+  }
 
   async create(
     body: CreateNeighborhoodReqDto,

@@ -6,8 +6,10 @@ import { Express } from 'express'
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -21,6 +23,8 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -90,6 +94,22 @@ class NeighborhoodsController {
     file: Express.Multer.File
   ): Promise<GetNeighborhoodResDto> {
     return this.neighborhoodsService.create(body, file, currentUser)
+  }
+
+  @Get('/neighborhoods/:id')
+  @ApiOperation({
+    summary: 'Get information about a neighborhood'
+  })
+  @ApiOkResponse({
+    description: 'Information about a neighborhood',
+    type: GetNeighborhoodResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  getNeighborhood(@Param('id') id: string): Promise<GetNeighborhoodResDto> {
+    return this.neighborhoodsService.findById(id)
   }
 }
 
