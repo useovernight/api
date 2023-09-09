@@ -9,13 +9,16 @@ import { Account } from '../accounts/entities/account.entity'
 import { AuthToken } from '../auth-tokens/entities/auth-token.entity'
 import { CaslAction } from '../common/enums/casl-action.enum'
 import { Permission } from '../common/enums/permission.enum'
+import { Neighborhood } from '../neighborhoods/entities/neighborhood.entity'
 import type {
   AbilityClass,
   ExtractSubjectType,
   InferSubjects
 } from '@casl/ability'
 
-type Subjects = InferSubjects<typeof Account | typeof AuthToken>
+type Subjects = InferSubjects<
+  typeof Account | typeof AuthToken | typeof Neighborhood
+>
 type AppAbility = PureAbility<[CaslAction, Subjects]>
 
 @Injectable()
@@ -57,6 +60,19 @@ class CaslAbilityFactory {
       can(CaslAction.Delete, AuthToken, {
         'owner.id': account.id
       })
+    }
+
+    /* Neighborhood */
+    if (permissions.includes(Permission.CreateNeighborhoods)) {
+      can(CaslAction.Create, Neighborhood)
+    }
+
+    if (permissions.includes(Permission.UpdateNeighborhoods)) {
+      can(CaslAction.Update, Neighborhood)
+    }
+
+    if (permissions.includes(Permission.DeleteNeighborhoods)) {
+      can(CaslAction.Delete, Neighborhood)
     }
 
     return build({

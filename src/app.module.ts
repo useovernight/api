@@ -10,11 +10,13 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { DocumentTransferModule } from '@useovernight/document-transfer'
 import { AccountsModule } from './accounts/accounts.module'
 import { AuthModule } from './auth/auth.module'
 import { AuthTokensModule } from './auth-tokens/auth-tokens.module'
 import { CaslModule } from './casl/casl.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { NeighborhoodsModule } from './neighborhoods/neighborhoods.module'
 
 @Module({
   imports: [
@@ -47,7 +49,9 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
     AccountsModule,
     AuthModule,
     AuthTokensModule,
-    CaslModule
+    CaslModule,
+    DocumentTransferModule,
+    NeighborhoodsModule
   ],
   providers: [
     {

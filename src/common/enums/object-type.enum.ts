@@ -5,7 +5,9 @@
 enum ObjectType {
   Account = 'account',
   AuthToken = 'auth-token',
-  List = 'list'
+  Image = 'image',
+  List = 'list',
+  Neighborhood = 'neighborhood'
 }
 
 export { ObjectType }
