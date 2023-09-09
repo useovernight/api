@@ -11,6 +11,7 @@ import {
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   Query,
   UploadedFile,
@@ -37,6 +38,7 @@ import { CreateNeighborhoodReqDto } from './dto/create-neighborhood.req.dto'
 import { GetNeighborhoodResDto } from './dto/get-neighborhood.res.dto'
 import { GetNeighborhoodsQueryDto } from './dto/get-neighborhoods.query.res.dto'
 import { GetNeighborhoodsResDto } from './dto/get-neighborhoods.res.dto'
+import { UpdateNeighborhoodReqDto } from './dto/update-neighborhood.req.dto'
 import { Account } from '../accounts/entities/account.entity'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
 import { NeighborhoodCoverImageMaxSize } from '../common/constants/file-size.const'
@@ -160,6 +162,44 @@ class NeighborhoodsController {
   })
   getNeighborhood(@Param('id') id: string): Promise<GetNeighborhoodResDto> {
     return this.neighborhoodsService.findById(id)
+  }
+
+  @Patch('/neighborhoods/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Update information about a neighborhood'
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiOkResponse({
+    description: 'Updated information about a neighborhood',
+    type: GetNeighborhoodResDto
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+    type: ErrorResDto
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'Unprocessable Content',
+    type: ErrorResDto
+  })
+  updateNeighborhood(
+    @CurrentUser() currentUser: Account,
+    @Param('id') id: string,
+    @Body() body: UpdateNeighborhoodReqDto
+  ): Promise<GetNeighborhoodResDto> {
+    return this.neighborhoodsService.updateById(id, body, currentUser)
   }
 }
 

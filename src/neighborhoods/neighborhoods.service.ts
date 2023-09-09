@@ -20,6 +20,7 @@ import type { Express } from 'express'
 import type { PagingResult } from '@useovernight/pagination'
 import type { CreateNeighborhoodReqDto } from './dto/create-neighborhood.req.dto'
 import type { GetNeighborhoodsQueryDto } from './dto/get-neighborhoods.query.res.dto'
+import type { UpdateNeighborhoodReqDto } from './dto/update-neighborhood.req.dto'
 import type { Account } from '../accounts/entities/account.entity'
 
 @Injectable()
@@ -73,6 +74,34 @@ class NeighborhoodsService {
     })
 
     return paginator.paginate()
+  }
+
+  async update(
+    subject: Neighborhood,
+    body: UpdateNeighborhoodReqDto,
+    initiator: Account
+  ): Promise<Neighborhood> {
+    const ability = this.caslAbilityFactory.createForAccount(initiator)
+
+    if (ability.cannot(CaslAction.Update, subject)) {
+      throw new ForbiddenException()
+    }
+
+    await this.neighborhoodsRepository.save({
+      ...subject,
+      ...body
+    })
+
+    return this.findById(subject.id)
+  }
+
+  async updateById(
+    id: string,
+    body: UpdateNeighborhoodReqDto,
+    initiator: Account
+  ): Promise<Neighborhood> {
+    const subject = await this.findById(id)
+    return this.update(subject, body, initiator)
   }
 
   private async createCoverImage(
