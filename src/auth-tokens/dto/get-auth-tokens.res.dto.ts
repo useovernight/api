@@ -3,8 +3,8 @@
  */
 
 import { ApiProperty } from '@nestjs/swagger'
-import { PaginationCursorsResDto } from '@useovernight/pagination'
 import { AuthTokenResDto } from './auth-token.res.dto'
+import { PaginationCursorsResDto } from '../../common/dto/pagination-cursors.res.dto'
 import { ObjectType } from '../../common/enums/object-type.enum'
 
 class GetAuthTokensResDto {

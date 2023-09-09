@@ -3,7 +3,6 @@
  */
 
 export * from './build-paginator'
-export * from './dto/pagination-cursors.res.dto'
 export * from './enums/pagination-order.enum'
 export * from './helpers/transformer.helper'
 export * from './paginators/paginator'
