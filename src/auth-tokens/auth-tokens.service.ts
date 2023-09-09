@@ -113,6 +113,31 @@ class AuthTokensService {
     return this.list(owner, query, initiator)
   }
 
+  async delete(subject: AuthToken, initiator: Account): Promise<void> {
+    const ability = this.caslAbilityFactory.createForAccount(initiator)
+
+    if (ability.cannot(CaslAction.Delete, subject)) {
+      throw new ForbiddenException()
+    }
+
+    await this.authTokensRepository.remove(subject)
+  }
+
+  async deleteById(authTokenId: string, initiator: Account): Promise<void> {
+    const authToken = await this.authTokensRepository.findOne({
+      where: {
+        id: authTokenId
+      },
+      relations: ['owner']
+    })
+
+    if (authToken === null) {
+      throw new NotFoundException()
+    }
+
+    await this.delete(authToken, initiator)
+  }
+
   private createJwt(authToken: AuthToken, expiresAt: Date): string {
     const payload: JwtApplicationPayload = {
       jti: authToken.id,

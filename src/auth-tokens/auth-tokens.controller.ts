@@ -2,11 +2,21 @@
  * Copyright (c) Overnight
  */
 
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Query,
+  UseGuards
+} from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -148,6 +158,34 @@ class AuthTokensController {
       cursors,
       object: ObjectType.List
     }
+  }
+
+  @Delete('/auth-tokens/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Delete auth token by id'
+  })
+  @ApiNoContentResponse({
+    description: 'Delete an auth token by id'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: ErrorResDto
+  })
+  @ApiForbiddenResponse({
+    description: 'Forbidden',
+    type: ErrorResDto
+  })
+  @ApiNotFoundResponse({
+    description: 'Not Found',
+    type: ErrorResDto
+  })
+  async deleteById(
+    @CurrentUser() currentUser: Account,
+    @Param('id') id: string
+  ): Promise<void> {
+    await this.authTokensService.deleteById(id, currentUser)
   }
 }
 
